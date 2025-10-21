@@ -27,7 +27,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'CobreCoin',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFC96000)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xFFC96000),
+          brightness: Brightness.dark,
+        ),
       ),
       home: const HomeScreen(),
     );
@@ -51,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     FantasyRoute(),
     StatsRoute(),
   ];
-  
+
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -61,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Hello $_user!'),
@@ -74,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
         onTap: _onTabTapped,
         items: const [
-
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -94,10 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.bar_chart),
             label: 'Stats',
           ),
-
         ],
       ),
-
     );
   }
 }
