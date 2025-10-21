@@ -10,6 +10,8 @@ import 'routes/send.dart';
 import 'routes/fantasy.dart';
 import 'routes/stats.dart';
 
+import 'utils/show_snack_bar.dart';
+
 Future<void> main() async {
   usePathUrlStrategy();
 
@@ -51,7 +53,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String _user = 'Test';
+  String? _displayName;
+  String? _username;
+  var _loading = true;
+  Future<void> _getProfile() async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final userId = supabase.auth.currentSession!.user.id;
+      final data = await supabase.from('users').select().eq('id', userId).single();
+      _displayName = (data['display_name'] ?? '') as String;
+      _username = (data['username'] ?? '') as String;
+    } on PostgrestException catch (error) {
+      if (mounted) context.showSnackBar(error.message, isError: true);
+    } catch (error) {
+      if (mounted) {
+        context.showSnackBar('Unexpected error occurred', isError: true);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
+  }
+
   int _currentIndex = 0;
 
   final List<Widget> _views = const [
@@ -66,13 +94,37 @@ class _HomeScreenState extends State<HomeScreen> {
       _currentIndex = index;
     });
   }
+  
+  @override
+  void initState() {
+    super.initState();
+    _getProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Hello $_user!'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hello $_displayName!',
+              style: const TextStyle(
+                fontSize: 20, // main title size
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '@$_username',
+              style: TextStyle(
+                fontSize: 14, // smaller subtitle
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), // subtle color
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings), // gear icon
