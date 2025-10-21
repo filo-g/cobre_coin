@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'routes/welcome.dart';
 import 'routes/send.dart';
 import 'routes/fantasy.dart';
 import 'routes/stats.dart';
 
-void main() {
+Future<void> main() async {
+import 'routes/fantasy.dart';
+import 'routes/stats.dart';
+
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+import 'routes/stats.dart';
+
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
