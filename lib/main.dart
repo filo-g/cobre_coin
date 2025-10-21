@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
+import 'routes/login.dart';
+import 'routes/account.dart';
 import 'routes/welcome.dart';
 import 'routes/send.dart';
 import 'routes/fantasy.dart';
 import 'routes/stats.dart';
 
 Future<void> main() async {
-import 'routes/fantasy.dart';
-import 'routes/stats.dart';
-
-Future<void> main() async {
-  await dotenv.load(fileName: ".env");
-import 'routes/stats.dart';
+  usePathUrlStrategy();
 
   await dotenv.load(fileName: ".env");
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL'] ?? '',
+    anonKey: dotenv.env['SUPABASE_PUBLISHABLE'] ?? '',
+  );
   runApp(const MyApp());
 }
+
+final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,7 +36,9 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
-      home: const HomeScreen(),
+      home: supabase.auth.currentSession == null
+          ? const LoginRoute()
+          : const HomeScreen(),
     );
   }
 }
@@ -67,6 +73,17 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Hello $_user!'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings), // gear icon
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountRoute()),
+              );
+            },
+          ),
+        ],
       ),
 
       body: _views[_currentIndex],
