@@ -17,6 +17,7 @@ class _LoginRouteState extends State<LoginRoute> {
   bool _redirecting = false;
   late final TextEditingController _emailController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
+
   Future<void> _signIn() async {
     try {
       setState(() {
@@ -45,6 +46,7 @@ class _LoginRouteState extends State<LoginRoute> {
       }
     }
   }
+
   @override
   void initState() {
     _authStateSubscription = supabase.auth.onAuthStateChange.listen(
@@ -68,12 +70,14 @@ class _LoginRouteState extends State<LoginRoute> {
     );
     super.initState();
   }
+
   @override
   void dispose() {
     _emailController.dispose();
     _authStateSubscription.cancel();
     super.dispose();
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
