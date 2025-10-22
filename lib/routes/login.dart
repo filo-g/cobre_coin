@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
-import 'package:cobre_coin/routes/account.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
 class LoginRoute extends StatefulWidget {
@@ -56,7 +55,7 @@ class _LoginRouteState extends State<LoginRoute> {
         if (session != null) {
           _redirecting = true;
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const AccountRoute()),
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         }
       },
