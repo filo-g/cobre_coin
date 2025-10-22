@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/routes/login.dart';
+import 'package:cobre_coin/utils/supabase_utils.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
 class AccountRoute extends StatefulWidget {
@@ -24,10 +25,9 @@ class _AccountRouteState extends State<AccountRoute> {
     });
 
     try {
-      final userId = supabase.auth.currentSession!.user.id;
-      final data = await supabase.from('users').select().eq('id', userId).single();
-      _displayNameController.text = (data['display_name'] ?? '') as String;
-      _avatarUrl = (data['avatar_url'] ?? '') as String;
+      final data = await SupabaseUtils.getUserData();
+      _displayNameController.text = (data?['display_name'] ?? '') as String;
+      _avatarUrl = (data?['avatar_url'] ?? '') as String;
     } on PostgrestException catch (error) {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {

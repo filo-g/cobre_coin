@@ -10,6 +10,7 @@ import 'routes/send.dart';
 import 'routes/fantasy.dart';
 import 'routes/stats.dart';
 
+import 'utils/supabase_utils.dart';
 import 'utils/show_snack_bar.dart';
 
 Future<void> main() async {
@@ -61,10 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
       _loading = true;
     });
     try {
-      final userId = supabase.auth.currentSession!.user.id;
-      final data = await supabase.from('users').select().eq('id', userId).single();
-      _displayName = (data['display_name'] ?? '') as String;
-      _username = (data['username'] ?? '') as String;
+      final data = await SupabaseUtils.getUserData();
+      _displayName = (data?['display_name'] ?? '') as String;
+      _username = (data?['username'] ?? '') as String;
     } on PostgrestException catch (error) {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {
