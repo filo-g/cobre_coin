@@ -96,15 +96,15 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
-                                fontSize: constraints.maxWidth < 400 ? 24 : 28,
+                                fontSize: constraints.maxWidth < 400 ? 32 : 36,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                           const SizedBox(width: 6),
                           SvgPicture.asset(
-                            'assets/svg/cobre.svg',
-                            height: constraints.maxWidth < 400 ? 24 : 28,
+                            'assets/svg/cobrecoin.svg',
+                            height: constraints.maxWidth < 400 ? 36 : 48,
                             colorFilter: ColorFilter.mode(
                               theme.colorScheme.primary,
                               BlendMode.srcIn,
