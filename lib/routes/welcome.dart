@@ -2,14 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/svg.dart';
 
-class WelcomeRoute extends StatelessWidget {
+import 'package:cobre_coin/utils/supabase_utils.dart';
+import 'package:cobre_coin/utils/show_snack_bar.dart';
+
+class WelcomeRoute extends StatefulWidget {
   const WelcomeRoute({super.key});
+
+  @override
+  State<WelcomeRoute> createState() => _WelcomeRouteState();
+}
+
+class _WelcomeRouteState extends State<WelcomeRoute> {
+
+  int? _balance;
+  String _formattedBalance = '0';
+  var _loading = true;
+  Future<void> _getBalance() async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final accounts = await SupabaseUtils.getUserAccounts();
+      context.showSnackBar('$accounts', isError: false);
+      if (accounts != null && accounts.isNotEmpty) {
+        final balanceValue = accounts.first['balance'];
+
+        if (balanceValue is num) {
+          _balance = balanceValue.toInt();
+        } else {
+          _balance = 0;
+        }
+        _formattedBalance = NumberFormat('#,##0', 'es_ES').format(_balance);
+      }
+    } catch (error) {
+      if (mounted) {
+        context.showSnackBar('$error', isError: true);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    _getBalance();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final balance = 12345; // TODO: Change to get balance from supabase
-    final formattedBalance = NumberFormat('#,##0', 'es_ES').format(balance);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -49,7 +95,7 @@ class WelcomeRoute extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        formattedBalance,
+                        _formattedBalance,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: theme.colorScheme.primary,
