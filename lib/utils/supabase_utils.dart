@@ -14,18 +14,18 @@ class SupabaseUtils {
   /// 
   /// Returns a Map&lt;String, dynamic&gt; with the user data, NULL if failed.
   static Future<Map<String, dynamic>?> getUserData() async {
-      final userId = getUserId();
-      if (userId == null) {
-        // User is not logged in.
-        return null;
-      }
+    final userId = getUserId();
+    if (userId == null) {
+      // User is not logged in.
+      return null;
+    }
 
-      final data = await supabase
-          .from('users')
-          .select()
-          .eq('id', userId)
-          .single();
+    final data = await supabase
+        .from('users')
+        .select()
+        .eq('id', userId)
+        .single();
 
-      return data;
+    return data;
   }
 }
