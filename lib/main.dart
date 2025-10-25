@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 import 'routes/login.dart';
 import 'routes/account.dart';
@@ -12,6 +13,7 @@ import 'routes/stats.dart';
 
 import 'utils/supabase_utils.dart';
 import 'utils/show_snack_bar.dart';
+import 'utils/phone_form_field.dart';
 
 Future<void> main() async {
   usePathUrlStrategy();
@@ -32,6 +34,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: PhoneFieldLocalization.delegates,
+      supportedLocales: PhoneFieldView.supportedLocales,
+      locale: const Locale('es'),
       title: 'CobreCoin',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

@@ -3,19 +3,27 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
+import 'package:cobre_coin/utils/phone_form_field.dart';
 
 class LoginRoute extends StatefulWidget {
   const LoginRoute({super.key});
+
   @override
   State<LoginRoute> createState() => _LoginRouteState();
 }
 class _LoginRouteState extends State<LoginRoute> {
   bool _isLoading = false;
   bool _redirecting = false;
+  // Email-related vars
   late final TextEditingController _emailController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
+  // Phone-related vars
+  late PhoneController _phoneController;
+  final FocusNode focusNode = FocusNode();
+  final formKey = GlobalKey<FormState>();
 
   Future<void> _signIn() async {
     try {
@@ -48,6 +56,9 @@ class _LoginRouteState extends State<LoginRoute> {
 
   @override
   void initState() {
+    _phoneController = PhoneController();
+    _phoneController.addListener(() => setState(() {}));
+    
     _authStateSubscription = supabase.auth.onAuthStateChange.listen(
       (data) {
         if (_redirecting) return;
@@ -73,6 +84,7 @@ class _LoginRouteState extends State<LoginRoute> {
   @override
   void dispose() {
     _emailController.dispose();
+    _phoneController.dispose();
     _authStateSubscription.cancel();
     super.dispose();
   }
@@ -86,9 +98,33 @@ class _LoginRouteState extends State<LoginRoute> {
         children: [
           const Text('Sign in via the magic link with your email below'),
           const SizedBox(height: 18),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
+          Form(
+            key: formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
+                  contentPadding: const EdgeInsets.all(12)),
+                ),
+                const SizedBox(height: 8),
+                PhoneFieldView(
+                  controller: _phoneController,
+                  focusNode: focusNode,
+                  selectorNavigator:
+                    CountrySelectorNavigator.draggableBottomSheet(
+                      favorites: [IsoCode.ES],
+                    ),
+                  withLabel: false,
+                  outlineBorder: true,
+                  isCountryButtonPersistant: true,
+                  mobileOnly: false,
+                  locale: Locale('es'),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 18),
           ElevatedButton(
