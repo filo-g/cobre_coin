@@ -11,6 +11,7 @@ class PhoneFieldView extends StatelessWidget {
   final FocusNode focusNode;
   final CountrySelectorNavigator selectorNavigator;
   final bool withLabel;
+  final bool withDescription;
   final bool outlineBorder;
   final bool isCountryButtonPersistant;
   final bool mobileOnly;
@@ -22,6 +23,7 @@ class PhoneFieldView extends StatelessWidget {
     required this.focusNode,
     required this.selectorNavigator,
     required this.withLabel,
+    required this.withDescription,
     required this.outlineBorder,
     required this.isCountryButtonPersistant,
     required this.mobileOnly,
@@ -47,6 +49,8 @@ class PhoneFieldView extends StatelessWidget {
         child: Builder(
           builder: (context) {
             final label = PhoneFieldLocalization.of(context).phoneNumber;
+            final description = 'Your phone number.';
+
             return PhoneFormField(
               focusNode: focusNode,
               controller: controller,
@@ -61,6 +65,7 @@ class PhoneFieldView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50))
                       : const UnderlineInputBorder(),
                   hintText: withLabel ? '' : label,
+                  helperText: withDescription ? description : null,
                   contentPadding: const EdgeInsets.all(0)),
               enabled: true,
               countryButtonStyle: CountryButtonStyle(

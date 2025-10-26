@@ -118,6 +118,7 @@ class _LoginRouteState extends State<LoginRoute> {
                       favorites: [IsoCode.ES],
                     ),
                   withLabel: false,
+                  withDescription: false,
                   outlineBorder: true,
                   isCountryButtonPersistant: true,
                   mobileOnly: false,
