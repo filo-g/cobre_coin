@@ -3,6 +3,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseUtils {
   static final supabase = Supabase.instance.client;
   
+  /// Returns supabase instance.
+  static SupabaseClient getInstance() {
+    return supabase;
+  }
+
+  /// Returns current user session.
+  /// 
+  /// Returns NULL if there is no session.
+  static Session? getCurrentSession() {
+    return supabase.auth.currentSession;
+  }
+
   /// Get the currently authenticated user's ID
   /// 
   /// Returns NULL if user is not logged in.
