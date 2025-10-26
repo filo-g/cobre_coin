@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
-import 'routes/login.dart';
+import 'routes/splash.dart';
 import 'routes/account.dart';
 import 'routes/welcome.dart';
 import 'routes/send.dart';
@@ -44,9 +44,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
-      home: supabase.auth.currentSession == null
-          ? const LoginRoute()
-          : const HomeScreen(),
+      home: SplashRoute(),
     );
   }
 }
