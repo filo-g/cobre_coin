@@ -3,7 +3,7 @@ import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
 
 import 'login.dart';
-// import 'register.dart';
+import 'register.dart';
 
 class SplashRoute extends StatefulWidget {
   const SplashRoute({super.key});
@@ -36,7 +36,7 @@ class _SplashRouteState extends State<SplashRoute> {
 
       // TODO: ask for register instead of LoginRoute
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginRoute()),
+        MaterialPageRoute(builder: (_) => const RegisterRoute()),
       );
 
     }
