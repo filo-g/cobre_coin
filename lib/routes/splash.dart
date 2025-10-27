@@ -34,7 +34,6 @@ class _SplashRouteState extends State<SplashRoute> {
 
     } else {  // REGISTER PAGE
 
-      // TODO: ask for register instead of LoginRoute
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const RegisterRoute()),
       );

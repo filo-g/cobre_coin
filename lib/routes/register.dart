@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cobre_coin/routes/login.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:cobre_coin/main.dart';
@@ -59,7 +59,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
         phoneValue.isValid(type: PhoneNumberType.mobile)
       ) {
 
-        // TODO: Check if Register logic is working
         final email = _emailController.text.trim();
         final password = _passwordController.text.trim();
         final username = _usernameController.text.trim();
@@ -71,20 +70,24 @@ class _RegisterRouteState extends State<RegisterRoute> {
 
         final AuthResponse res = await supabase.auth.signUp(
           email: email,
-          phone: phone,
           password: password,
-          data: {
+          data: { // public metadata will be stored in public.users by a function trigger
             'username': username,
             'display_name': displayName,
             'full_name': fullName,
             'pronouns': pronouns,
             'birth_date': birthDate,
+            'phone': phone, // storing it in metadata to avoid OTP
           },
+          emailRedirectTo:
+              kIsWeb ? null : 'io.supabase.cobrecoin://register-callback/',
         );
         final Session? session = res.session;
         final User? user = res.user;
 
+        if (user != null) {
         // TODO: do whatever is needed with session and user to wait for aproval
+        }
 
       }
 
@@ -92,7 +95,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {
       if (mounted) {
-        context.showSnackBar('Unexpected error occurred', isError: true);
+        context.showSnackBar('$error', isError: true);
       }
     } finally {
       if (mounted) {
