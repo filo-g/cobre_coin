@@ -63,7 +63,7 @@ class _LoginRouteState extends State<LoginRoute> {
       (data) {
         if (_redirecting) return;
         final session = data.session;
-        if (session != null) {
+        if (mounted && session != null) {
           _redirecting = true;
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -71,10 +71,12 @@ class _LoginRouteState extends State<LoginRoute> {
         }
       },
       onError: (error) {
-        if (error is AuthException) {
-          context.showSnackBar(error.message, isError: true);
-        } else {
-          context.showSnackBar('Unexpected error occurred', isError: true);
+        if (mounted) {
+          if (error is AuthException) {
+            context.showSnackBar(error.message, isError: true);
+          } else {
+            context.showSnackBar('Unexpected error occurred', isError: true);
+          }
         }
       },
     );

@@ -82,7 +82,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
           emailRedirectTo:
               kIsWeb ? null : 'io.supabase.cobrecoin://register-callback/',
         );
-        final Session? session = res.session;
+        // final Session? session = res.session;
         final User? user = res.user;
 
         if (user != null) {
@@ -136,11 +136,12 @@ class _RegisterRouteState extends State<RegisterRoute> {
     _phoneController = PhoneController();
     _phoneController.addListener(() => setState(() {}));
     
+    // TODO: Check this as is a copy-paste from login.dart
     _authStateSubscription = supabase.auth.onAuthStateChange.listen(
       (data) {
         if (_redirecting) return;
         final session = data.session;
-        if (session != null) {
+        if (mounted && session != null) {
           _redirecting = true;
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -148,10 +149,12 @@ class _RegisterRouteState extends State<RegisterRoute> {
         }
       },
       onError: (error) {
-        if (error is AuthException) {
-          context.showSnackBar(error.message, isError: true);
-        } else {
-          context.showSnackBar('Unexpected error occurred', isError: true);
+        if (mounted) {
+          if (error is AuthException) {
+            context.showSnackBar(error.message, isError: true);
+          } else {
+            context.showSnackBar('Unexpected error occurred', isError: true);
+          }
         }
       },
     );

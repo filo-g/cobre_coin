@@ -17,7 +17,7 @@ class PhoneFieldView extends StatelessWidget {
   final bool mobileOnly;
   final Locale locale;
 
-  PhoneFieldView({
+  const PhoneFieldView({
     super.key,
     required this.controller,
     required this.focusNode,
