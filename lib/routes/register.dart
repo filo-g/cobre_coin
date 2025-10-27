@@ -21,6 +21,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
   bool _redirecting = false;
   DateTime _selectedDate = DateTime.now();
   String? _selectedDateFormatted;
+  String? _selectedPronouns;
   
   // Form fields
   final _usernameController = TextEditingController();
@@ -36,6 +37,12 @@ class _RegisterRouteState extends State<RegisterRoute> {
   late PhoneController _phoneController;
   final FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  // Pronouns options
+  final List<DropdownMenuItem> pronounsItems = [
+    DropdownMenuItem(value: 'he', child: Text('He/him')),
+    DropdownMenuItem(value: 'she', child: Text('She/her')),
+    DropdownMenuItem(value: 'they', child: Text('They/them')),
+  ];
   
 
 
@@ -60,6 +67,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
         final fullName = _fullNameController.text.trim();
         final phone = "+${phoneValue.countryCode}${phoneValue.nsn}";
         final birthDate = _selectedDateFormatted;
+        final pronouns = _selectedPronouns;
 
         final AuthResponse res = await supabase.auth.signUp(
           email: email,
@@ -69,7 +77,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
             'username': username,
             'display_name': displayName,
             'full_name': fullName,
-            // TODO: missing pronouns field
+            'pronouns': pronouns,
             'birth_date': birthDate,
           },
         );
@@ -110,12 +118,12 @@ class _RegisterRouteState extends State<RegisterRoute> {
           ${picked.toLocal().year.toString().padLeft(4, '0')}-
           ${picked.month.toString().padLeft(2, '0')}-
           ${picked.day.toString().padLeft(2, '0')}
-        '''.replaceAll(RegExp(r'\s+'), '');
+        '''.replaceAll(RegExp(r'\s+'), ''); // format like yyyy-mm-dd
         _dateController.text = '''
           ${picked.day.toString().padLeft(2, '0')}/
           ${picked.month.toString().padLeft(2, '0')}/
           ${picked.year}
-        '''.replaceAll(RegExp(r'\s+'), '');
+        '''.replaceAll(RegExp(r'\s+'), ''); // format like dd/mm/yyyy
       });
     }
   }
@@ -270,6 +278,20 @@ class _RegisterRouteState extends State<RegisterRoute> {
                     border: decorationBorder,
                     contentPadding: decorationContentPadding,
                   ),
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField(
+                  initialValue: _selectedPronouns,
+                  decoration: InputDecoration(
+                    labelText: 'Pronouns',
+                    helperText: 'The pronouns you are more confortable with.',
+                    border: decorationBorder,
+                    contentPadding: decorationContentPadding,
+                  ),
+                  items: pronounsItems,
+                  onChanged: (val) => setState(() {
+                    _selectedPronouns = val;
+                  }),
                 ),
                 const SizedBox(height: 16),
                 PhoneFieldView(
