@@ -217,8 +217,23 @@ class _RegisterRouteState extends State<RegisterRoute> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a password';
                           }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                          final rules = {
+                            r'.{8,}':
+                              'Password must be at least 8 characters',
+                            r'[a-z]':
+                              'Password must contain at least one lowercase letter',
+                            r'[A-Z]':
+                              'Password must contain at least one uppercase letter',
+                            r'[0-9]':
+                              'Password must contain at least one number',
+                            r'[!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:\",.<>\/?\\|`~]':
+                              'Password must contain at least one special character',
+                          };
+
+                          for (final entry in rules.entries) {
+                            if (!RegExp(entry.key).hasMatch(value)) {
+                              return entry.value;
+                            }
                           }
                           return null;
                         },
