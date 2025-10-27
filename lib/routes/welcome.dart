@@ -79,7 +79,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Balance - ${account['name']}',
+                        'Balance${account['name'] != null ? ' - ${account['name']}' : ''}',
                         style: TextStyle(
                           color: theme.colorScheme.secondary,
                           fontSize: constraints.maxWidth < 400 ? 14 : 16,
