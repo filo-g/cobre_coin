@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
-import 'package:cobre_coin/routes/login.dart';
+import 'package:cobre_coin/routes/login_route.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 

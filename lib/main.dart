@@ -4,12 +4,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
-import 'routes/splash.dart';
-import 'routes/account.dart';
-import 'routes/welcome.dart';
-import 'routes/send.dart';
-import 'routes/fantasy.dart';
-import 'routes/stats.dart';
+import 'routes/splash_route.dart';
+import 'views/account_view.dart';
+import 'views/welcome_view.dart';
+import 'views/send_view.dart';
+import 'views/fantasy_view.dart';
+import 'views/stats_view.dart';
 
 import 'utils/supabase_utils.dart';
 import 'utils/show_snack_bar.dart';

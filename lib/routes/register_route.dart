@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cobre_coin/routes/login.dart';
+import 'package:cobre_coin/routes/login_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

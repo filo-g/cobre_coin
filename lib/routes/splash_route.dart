@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
 
-// import 'login.dart';
-import 'register.dart';
+// import 'login_route.dart';
+import 'register_route.dart';
 
 class SplashRoute extends StatefulWidget {
   const SplashRoute({super.key});
