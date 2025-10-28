@@ -5,14 +5,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
-class WelcomeRoute extends StatefulWidget {
-  const WelcomeRoute({super.key});
+class WelcomeView extends StatefulWidget {
+  const WelcomeView({super.key});
 
   @override
-  State<WelcomeRoute> createState() => _WelcomeRouteState();
+  State<WelcomeView> createState() => _WelcomeViewState();
 }
 
-class _WelcomeRouteState extends State<WelcomeRoute> {
+class _WelcomeViewState extends State<WelcomeView> {
 
   final NumberFormat _formatter = NumberFormat('#,##0', 'es_ES');
   List? _accounts = [];

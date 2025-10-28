@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class StatsRoute extends StatelessWidget {
-  const StatsRoute({super.key});
+class StatsView extends StatelessWidget {
+  const StatsView({super.key});
 
   @override
   Widget build(BuildContext context) {

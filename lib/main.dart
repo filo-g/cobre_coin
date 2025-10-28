@@ -87,10 +87,10 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _views = const [
-    WelcomeRoute(),
-    SendRoute(),
-    FantasyRoute(),
-    StatsRoute(),
+    WelcomeView(),
+    SendView(),
+    FantasyView(),
+    StatsView(),
   ];
 
   void _onTabTapped(int index) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FantasyRoute extends StatelessWidget {
-  const FantasyRoute({super.key});
+class FantasyView extends StatelessWidget {
+  const FantasyView({super.key});
 
   @override
   Widget build(BuildContext context) {

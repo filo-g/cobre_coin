@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SendRoute extends StatefulWidget {
-  const SendRoute({super.key});
+class SendView extends StatefulWidget {
+  const SendView({super.key});
 
   @override
-  State<SendRoute> createState() => _SendRouteState();
+  State<SendView> createState() => _SendViewState();
 }
 
-class _SendRouteState extends State<SendRoute> {
+class _SendViewState extends State<SendView> {
   final List<String> _items = List.generate(30, (i) => 'Item ${i + 1}');
 
   void _onFabPressed() {
