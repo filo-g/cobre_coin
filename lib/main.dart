@@ -61,6 +61,7 @@ class _MainScreenState extends State<MainScreen> {
   String? _displayName;
   String? _username;
   var _loading = true;
+
   Future<void> _getProfile() async {
     setState(() {
       _loading = true;
@@ -169,6 +170,7 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Stats',
           ),
         ],
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
     );
   }
