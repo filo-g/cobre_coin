@@ -17,15 +17,48 @@ class LoginRoute extends StatefulWidget {
 class _LoginRouteState extends State<LoginRoute> {
   bool _isLoading = false;
   bool _redirecting = false;
-  // Email-related vars
-  late final TextEditingController _emailController = TextEditingController();
-  late final StreamSubscription<AuthState> _authStateSubscription;
-  // Phone-related vars
-  late PhoneController _phoneController;
-  final FocusNode focusNode = FocusNode();
-  final formKey = GlobalKey<FormState>();
 
-  Future<void> _signIn() async {
+  late final TextEditingController _emailController = TextEditingController();
+  late final TextEditingController _passwordController = TextEditingController();
+  late final StreamSubscription<AuthState> _authStateSubscription;
+
+  Future<void> _signInWithPassword() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      final AuthResponse res = await supabase.auth.signInWithPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      final Session? session = res.session;
+      final User? user = res.user;
+
+      if (mounted) {
+        if (session != null && user != null) {
+          context.showSnackBar('Logged in successfully!');
+        } else {
+          context.showSnackBar('Something went wrong.');
+        }
+        _emailController.clear();
+        _passwordController.clear();
+      }
+    } on AuthException catch (error) {
+      if (mounted) context.showSnackBar(error.message, isError: true);
+    } catch (error) {
+      if (mounted) {
+        context.showSnackBar('Unexpected error occurred', isError: true);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+  Future<void> _signInWithOtp() async {
     try {
       setState(() {
         _isLoading = true;
@@ -56,9 +89,6 @@ class _LoginRouteState extends State<LoginRoute> {
 
   @override
   void initState() {
-    _phoneController = PhoneController();
-    _phoneController.addListener(() => setState(() {}));
-    
     _authStateSubscription = supabase.auth.onAuthStateChange.listen(
       (data) {
         if (_redirecting) return;
@@ -86,53 +116,53 @@ class _LoginRouteState extends State<LoginRoute> {
   @override
   void dispose() {
     _emailController.dispose();
-    _phoneController.dispose();
+    _passwordController.dispose();
     _authStateSubscription.cancel();
     super.dispose();
   }
   
   @override
   Widget build(BuildContext context) {
+    // Styles
+    var decorationBorder = OutlineInputBorder(borderRadius: BorderRadius.circular(50));
+    var decorationContentPadding = const EdgeInsets.all(12);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Sign In')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         children: [
-          const Text('Sign in via the magic link with your email below'),
+          const Text('Welcome back to the CobreCoin Internal Bank!'),
           const SizedBox(height: 18),
-          Form(
-            key: formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
-                  contentPadding: const EdgeInsets.all(12)),
-                ),
-                const SizedBox(height: 8),
-                PhoneFieldView(
-                  controller: _phoneController,
-                  focusNode: focusNode,
-                  selectorNavigator:
-                    CountrySelectorNavigator.draggableBottomSheet(
-                      favorites: [IsoCode.ES],
-                    ),
-                  withLabel: false,
-                  withDescription: false,
-                  outlineBorder: true,
-                  isCountryButtonPersistant: true,
-                  mobileOnly: false,
-                  locale: Locale('es'),
-                ),
-              ],
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              labelText: 'Email',
+              border: decorationBorder,
+              contentPadding: decorationContentPadding,
             ),
+            autofillHints: [
+              AutofillHints.username,
+            ],
+          ),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _passwordController,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              border: decorationBorder,
+              contentPadding: decorationContentPadding,
+            ),
+            autofillHints: [
+              AutofillHints.password,
+            ],
+            obscureText: true,
+            keyboardType: TextInputType.visiblePassword,
           ),
           const SizedBox(height: 18),
           ElevatedButton(
-            onPressed: _isLoading ? null : _signIn,
-            child: Text(_isLoading ? 'Sending...' : 'Send Magic Link'),
+            onPressed: _isLoading ? null : _signInWithPassword,
+            child: Text(_isLoading ? 'Logging in...' : 'Log in'),
           ),
         ],
       ),

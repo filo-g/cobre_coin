@@ -17,6 +17,7 @@ import 'utils/phone_form_field.dart';
 
 Future<void> main() async {
   usePathUrlStrategy();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ".env");
   await Supabase.initialize(
