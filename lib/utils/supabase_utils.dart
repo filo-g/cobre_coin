@@ -41,6 +41,12 @@ class SupabaseUtils {
     return data;
   }
 
+  /// Check if current user has been approved by an admin.
+  static Future<bool> getUserApproval() async {
+    final data = await getUserData();
+    return data?['approved'] == true;
+  }
+
   /// Fetch the user balance from the 'accounts' table.
   /// 
   /// Returns List&lt;Map&lt;String, dynamic&gt;&gt; with all the accounts
