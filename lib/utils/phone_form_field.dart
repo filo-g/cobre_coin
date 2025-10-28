@@ -78,10 +78,6 @@ class PhoneFieldView extends StatelessWidget {
               validator: _getValidator(context),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               cursorColor: Theme.of(context).colorScheme.primary,
-              // ignore: avoid_print
-              onSaved: (p) => print('saved $p'),
-              // ignore: avoid_print
-              onChanged: (p) => print('changed $p'),
             );
           },
         ),
