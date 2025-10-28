@@ -28,9 +28,9 @@ class _SplashRouteState extends State<SplashRoute> {
     if (mounted) {
       if (session != null) {  // LOGIN PAGE
 
-        // TODO: ask for pin/biometrics to unlock instead of HomeScreen
+        // TODO: ask for pin/biometrics to unlock instead of MainScreen
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const MainScreen()),
         );
 
       } else {  // REGISTER PAGE

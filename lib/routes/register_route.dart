@@ -144,7 +144,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
         if (mounted && session != null) {
           _redirecting = true;
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen()),
           );
         }
       },
