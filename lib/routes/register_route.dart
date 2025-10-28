@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cobre_coin/routes/login_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,6 +7,9 @@ import 'package:phone_form_field/phone_form_field.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 import 'package:cobre_coin/utils/phone_form_field.dart';
+
+import 'login_route.dart';
+import 'splash_route.dart';
 
 class RegisterRoute extends StatefulWidget {
   const RegisterRoute({super.key});
@@ -144,7 +146,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
         if (mounted && session != null) {
           _redirecting = true;
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainScreen()),
+            MaterialPageRoute(builder: (context) => const SplashRoute()),
           );
         }
       },
