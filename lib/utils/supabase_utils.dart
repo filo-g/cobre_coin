@@ -41,10 +41,22 @@ class SupabaseUtils {
     return data;
   }
 
+  /// Get the current user's role.
+  static Future<String> getUserRole() async {
+    final data = await getUserData();
+    return data?['role'];
+  }
+
   /// Check if current user has been approved by an admin.
   static Future<bool> getUserApproval() async {
     final data = await getUserData();
     return data?['approved'] == true;
+  }
+
+  /// More global getter for non-specific user fields.
+  static Future<String> getUserField(String field) async {
+    final data = await getUserData();
+    return data?[field];
   }
 
   /// Fetch the user balance from the 'accounts' table.
