@@ -18,8 +18,8 @@ class _LoginRouteState extends State<LoginRoute> {
   bool _isLoading = false;
   bool _redirecting = false;
 
-  late final TextEditingController _emailController = TextEditingController();
-  late final TextEditingController _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
 
   Future<void> _signInWithPassword() async {
@@ -27,9 +27,15 @@ class _LoginRouteState extends State<LoginRoute> {
       setState(() {
         _isLoading = true;
       });
+
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      if (email.isEmpty || password.isEmpty) return;
+
       final AuthResponse res = await supabase.auth.signInWithPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        email: email,
+        password: password,
       );
 
       final Session? session = res.session;
@@ -41,37 +47,10 @@ class _LoginRouteState extends State<LoginRoute> {
         } else {
           context.showSnackBar('Something went wrong.');
         }
-        _emailController.clear();
-        _passwordController.clear();
       }
-    } on AuthException catch (error) {
-      if (mounted) context.showSnackBar(error.message, isError: true);
-    } catch (error) {
-      if (mounted) {
-        context.showSnackBar('Unexpected error occurred', isError: true);
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-  Future<void> _signInWithOtp() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-      await supabase.auth.signInWithOtp(
-        email: _emailController.text.trim(),
-        emailRedirectTo:
-            kIsWeb ? null : 'io.supabase.cobrecoin://login-callback/',
-      );
-      if (mounted) {
-        context.showSnackBar('Check your email for a login link!');
-        _emailController.clear();
-      }
+      _emailController.clear();
+      _passwordController.clear();
+
     } on AuthException catch (error) {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {

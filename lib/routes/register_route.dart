@@ -24,6 +24,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
   DateTime _selectedDate = DateTime.now();
   String? _selectedDateFormatted;
   String? _selectedPronouns;
+  late final StreamSubscription<AuthState> _authStateSubscription;
   
   // Form fields
   final _usernameController = TextEditingController();
@@ -32,9 +33,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
   final _displayNameController = TextEditingController();
   final _fullNameController = TextEditingController();
   final _dateController = TextEditingController();
-  // Email-related vars
-  late final TextEditingController _emailController = TextEditingController();
-  late final StreamSubscription<AuthState> _authStateSubscription;
+  final _emailController = TextEditingController();
   // Phone-related vars
   late PhoneController _phoneController;
   final FocusNode focusNode = FocusNode();
@@ -70,7 +69,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
         final birthDate = _selectedDateFormatted;
         final pronouns = _selectedPronouns;
 
-        final AuthResponse res = await supabase.auth.signUp(
+        await supabase.auth.signUp(
           email: email,
           password: password,
           data: { // public metadata will be stored in public.users by a function trigger
@@ -84,13 +83,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
           emailRedirectTo:
               kIsWeb ? null : 'io.supabase.cobrecoin://register-callback/',
         );
-        // final Session? session = res.session;
-        final User? user = res.user;
-
-        if (user != null) {
-        // TODO: do whatever is needed with session and user to wait for aproval
-        }
-
       }
 
     } on AuthException catch (error) {
@@ -138,7 +130,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
     _phoneController = PhoneController();
     _phoneController.addListener(() => setState(() {}));
     
-    // TODO: Check this as is a copy-paste from login.dart
     _authStateSubscription = supabase.auth.onAuthStateChange.listen(
       (data) {
         if (_redirecting) return;
