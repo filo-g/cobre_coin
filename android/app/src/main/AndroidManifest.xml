@@ -36,6 +36,9 @@
                 <data
                 android:scheme="io.supabase.cobrecoin"
                 android:host="register-callback" />
+                <data
+                android:scheme="io.supabase.cobrecoin"
+                android:host="reset-password-callback" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

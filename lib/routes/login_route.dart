@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
 import 'splash_route.dart';
+import 'forgot_password_route.dart';
 
 class LoginRoute extends StatefulWidget {
   const LoginRoute({super.key});
@@ -142,6 +142,15 @@ class _LoginRouteState extends State<LoginRoute> {
           ElevatedButton(
             onPressed: _isLoading ? null : _signInWithPassword,
             child: Text(_isLoading ? 'Logging in...' : 'Log in'),
+          ),
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const ForgotPasswordRoute()),
+              );
+            },
+            child: const Text('I forgot my password'),
           ),
         ],
       ),
