@@ -16,11 +16,9 @@ class LoginRoute extends StatefulWidget {
 }
 class _LoginRouteState extends State<LoginRoute> {
   bool _isLoading = false;
-  bool _redirecting = false;
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  late final StreamSubscription<AuthState> _authStateSubscription;
 
   Future<void> _signInWithPassword() async {
     try {
@@ -44,6 +42,7 @@ class _LoginRouteState extends State<LoginRoute> {
       if (mounted) {
         if (session != null && user != null) {
           context.showSnackBar('Logged in successfully!');
+          // no need to do anything else, the redirect listener will change the route
         } else {
           context.showSnackBar('Something went wrong.');
         }
@@ -68,27 +67,6 @@ class _LoginRouteState extends State<LoginRoute> {
 
   @override
   void initState() {
-    _authStateSubscription = supabase.auth.onAuthStateChange.listen(
-      (data) {
-        if (_redirecting) return;
-        final session = data.session;
-        if (mounted && session != null) {
-          _redirecting = true;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const SplashRoute()),
-          );
-        }
-      },
-      onError: (error) {
-        if (mounted) {
-          if (error is AuthException) {
-            context.showSnackBar(error.message, isError: true);
-          } else {
-            context.showSnackBar('Unexpected error occurred', isError: true);
-          }
-        }
-      },
-    );
     super.initState();
   }
 
@@ -96,7 +74,6 @@ class _LoginRouteState extends State<LoginRoute> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _authStateSubscription.cancel();
     super.dispose();
   }
   

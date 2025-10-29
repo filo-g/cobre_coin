@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
-import 'package:cobre_coin/utils/show_snack_bar.dart';
 
 import 'register_route.dart';
 import 'approval_route.dart';
-import 'reset_password_route.dart';
 // import 'login_route.dart';
 
 class SplashRoute extends StatefulWidget {
@@ -19,30 +16,8 @@ class SplashRoute extends StatefulWidget {
 }
 
 class _SplashRouteState extends State<SplashRoute> {
-  late final StreamSubscription _authStateSubscription;
-
   @override
   void initState() {
-    // Supabase link redirects
-    _authStateSubscription = supabase.auth.onAuthStateChange.listen((data) {
-      final event = data.event;
-      switch (event) {
-        case AuthChangeEvent.passwordRecovery:
-          _goTo(ResetPasswordRoute());
-          break;
-        default:
-      }
-    },
-    onError: (error) {
-      if (mounted) {
-        if (error is AuthException) {
-          context.showSnackBar(error.message, isError: true);
-        } else {
-          context.showSnackBar('Unexpected error occurred', isError: true);
-        }
-      }
-    },);
-
     super.initState();
     _checkSession();
   }
@@ -72,12 +47,6 @@ class _SplashRouteState extends State<SplashRoute> {
 
     // TODO: ask for pin/biometrics to unlock instead of MainScreen
     _goTo(MainScreen());
-  }
-
-  @override
-  void dispose() {
-    _authStateSubscription.cancel();
-    super.dispose();
   }
 
   @override

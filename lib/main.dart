@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,6 +13,7 @@ import 'views/send_view.dart';
 import 'views/fantasy_view.dart';
 import 'views/stats_view.dart';
 
+import 'utils/supabase_auth_listener.dart';
 import 'utils/supabase_utils.dart';
 import 'utils/show_snack_bar.dart';
 import 'utils/phone_form_field.dart';
@@ -27,10 +30,31 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-final supabase = SupabaseUtils.getInstance(); 
+final supabase = SupabaseUtils.getInstance();
+final navigatorKey = GlobalKey<NavigatorState>();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final StreamSubscription _streamSubscription;
+  
+  @override
+  void initState() {
+    super.initState();
+    _streamSubscription = supabaseAuthListener(navigatorKey);
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +69,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
+      navigatorKey: navigatorKey,
       home: SplashRoute(),
     );
   }
@@ -58,9 +83,10 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  var _loading = true;
+
   String? _displayName;
   String? _username;
-  var _loading = true;
 
   Future<void> _getProfile() async {
     setState(() {

@@ -6,8 +6,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
 
-import 'reset_password_route.dart';
-
 class ForgotPasswordRoute extends StatefulWidget {
   const ForgotPasswordRoute({super.key});
 
@@ -15,7 +13,6 @@ class ForgotPasswordRoute extends StatefulWidget {
   State<ForgotPasswordRoute> createState() => _ForgotPasswordRouteState();
 }
 class _ForgotPasswordRouteState extends State<ForgotPasswordRoute> {
-  late final StreamSubscription _authStateSubscription;
   bool _isLoading = false;
 
   final _emailController = TextEditingController();
@@ -58,32 +55,8 @@ class _ForgotPasswordRouteState extends State<ForgotPasswordRoute> {
   }
 
   @override
-  void initState() {
-    // Supabase link redirects
-    _authStateSubscription = _supabase.auth.onAuthStateChange.listen((data) {
-      final event = data.event;
-      if (mounted && event == AuthChangeEvent.passwordRecovery) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const ResetPasswordRoute()),
-        );
-      }
-    },
-    onError: (error) {
-      if (mounted) {
-        if (error is AuthException) {
-          context.showSnackBar(error.message, isError: true);
-        } else {
-          context.showSnackBar('Unexpected error occurred', isError: true);
-        }
-      }
-    },);
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _emailController.dispose();
-    _authStateSubscription.cancel();
     super.dispose();
   }
   

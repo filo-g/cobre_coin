@@ -20,11 +20,9 @@ class RegisterRoute extends StatefulWidget {
 
 class _RegisterRouteState extends State<RegisterRoute> {
   bool _isLoading = false;
-  bool _redirecting = false;
   DateTime _selectedDate = DateTime.now();
   String? _selectedDateFormatted;
   String? _selectedPronouns;
-  late final StreamSubscription<AuthState> _authStateSubscription;
   
   // Form fields
   final _usernameController = TextEditingController();
@@ -129,28 +127,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
   void initState() {
     _phoneController = PhoneController();
     _phoneController.addListener(() => setState(() {}));
-    
-    _authStateSubscription = supabase.auth.onAuthStateChange.listen(
-      (data) {
-        if (_redirecting) return;
-        final session = data.session;
-        if (mounted && session != null) {
-          _redirecting = true;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const SplashRoute()),
-          );
-        }
-      },
-      onError: (error) {
-        if (mounted) {
-          if (error is AuthException) {
-            context.showSnackBar(error.message, isError: true);
-          } else {
-            context.showSnackBar('Unexpected error occurred', isError: true);
-          }
-        }
-      },
-    );
     super.initState();
   }
 
@@ -158,7 +134,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
   void dispose() {
     _emailController.dispose();
     _phoneController.dispose();
-    _authStateSubscription.cancel();
     super.dispose();
   }
 
