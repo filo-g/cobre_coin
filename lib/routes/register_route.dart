@@ -81,6 +81,8 @@ class _RegisterRouteState extends State<RegisterRoute> {
           emailRedirectTo:
               kIsWeb ? null : 'io.supabase.cobrecoin://register-callback/',
         );
+        
+        // no need to do anything else, the redirect listener will change the route
       }
 
     } on AuthException catch (error) {

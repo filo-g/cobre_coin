@@ -8,7 +8,7 @@ import 'show_snack_bar.dart';
 import 'supabase_utils.dart';
 
 /// Starts a global listener for Supabase auth redirect events such as password
-/// recovery. Uses a [navigatorKey] to control the view on redirects.
+/// recovery. Uses the MyApp's [navigatorKey] to control the view on redirects.
 ///
 /// Returns a [StreamSubscription].
 StreamSubscription<AuthState> supabaseAuthListener(GlobalKey<NavigatorState> navigatorKey) {
