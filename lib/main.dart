@@ -129,6 +129,7 @@ class _MainScreenState extends State<MainScreen> {
 
   BottomNavigationBar _userNavigationBar(BuildContext context) => BottomNavigationBar(
     currentIndex: _currentIndex,
+    type: BottomNavigationBarType.fixed,
     onTap: _onTabTapped,
     items: const [
       BottomNavigationBarItem(
@@ -155,6 +156,7 @@ class _MainScreenState extends State<MainScreen> {
   );
   BottomNavigationBar _adminNavigationBar(BuildContext context) => BottomNavigationBar(
   currentIndex: _currentIndex,
+  type: BottomNavigationBarType.fixed,
   onTap: _onTabTapped,
   items: const [
     BottomNavigationBarItem(
