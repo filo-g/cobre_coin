@@ -97,4 +97,58 @@ class SupabaseUtils {
 
     return accounts;
   }
+
+  /// Update the fields of current user.
+  /// 
+  /// Returns a &lt;PostgrestResponse&gt; or null if something foes wrong.
+  static Future<dynamic> updateSelf(Map<String, dynamic> updates) async {
+    final userId = getUserId();
+    late dynamic res;
+
+    if (userId == null) {
+      // User is not logged in.
+      return null;
+    }
+    
+    final updatedFields = {
+      ...updates,
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    try {
+      res = await supabase
+        .from('users')
+        .update(updatedFields)
+        .eq('id', userId);
+
+      return res;
+
+    } catch (e) {
+      print('Error updating user: $e');
+    }
+  }
+
+  /// Update the fields of given user.
+  /// 
+  /// Returns a &lt;PostgrestResponse&gt; or null if something foes wrong.
+  static Future<dynamic> updateUser(String userId, Map<String, dynamic> updates) async {
+    late dynamic res;
+    
+    final updatedFields = {
+      ...updates,
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    try {
+      res = await supabase
+        .from('users')
+        .update(updatedFields)
+        .eq('id', userId);
+
+      return res;
+
+    } catch (e) {
+      print('Error updating user: $e');
+    }
+  }
 }
