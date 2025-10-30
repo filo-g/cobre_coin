@@ -12,6 +12,7 @@ import 'views/welcome_view.dart';
 import 'views/send_view.dart';
 import 'views/fantasy_view.dart';
 import 'views/stats_view.dart';
+import 'views/admin/users_view.dart';
 
 import 'utils/supabase_auth_listener.dart';
 import 'utils/supabase_utils.dart';
@@ -87,15 +88,17 @@ class _MainScreenState extends State<MainScreen> {
 
   String? _displayName;
   String? _username;
+  bool _isAdmin = false;
 
   Future<void> _getProfile() async {
     setState(() {
       _loading = true;
     });
     try {
-      final data = await SupabaseUtils.getUserData();
-      _displayName = (data?['display_name'] ?? '') as String;
-      _username = (data?['username'] ?? '') as String;
+      _displayName = await SupabaseUtils.getUserField('display_name');
+      _username = await SupabaseUtils.getUserField('username');
+      _isAdmin = await SupabaseUtils.getUserRole() == 'admin';
+
     } on PostgrestException catch (error) {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {
@@ -113,12 +116,59 @@ class _MainScreenState extends State<MainScreen> {
 
   int _currentIndex = 0;
 
-  final List<Widget> _views = const [
+  final List<Widget> _userViews = const [
     WelcomeView(),
     SendView(),
     FantasyView(),
     StatsView(),
   ];
+  final List<Widget> _adminViews = const [
+    WelcomeView(),
+    UsersView(),
+  ];
+
+  BottomNavigationBar _userNavigationBar(BuildContext context) => BottomNavigationBar(
+    currentIndex: _currentIndex,
+    onTap: _onTabTapped,
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+
+      BottomNavigationBarItem(
+        icon: Icon(Icons.control_point_duplicate),
+        label: 'Send',
+      ),
+
+      BottomNavigationBarItem(
+        icon: Icon(Icons.recent_actors),
+        label: 'Fantasy',
+      ),
+
+      BottomNavigationBarItem(
+        icon: Icon(Icons.bar_chart),
+        label: 'Stats',
+      ),
+    ],
+    backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+  );
+  BottomNavigationBar _adminNavigationBar(BuildContext context) => BottomNavigationBar(
+  currentIndex: _currentIndex,
+  onTap: _onTabTapped,
+  items: const [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Home',
+    ),
+
+    BottomNavigationBarItem(
+      icon: Icon(Icons.manage_accounts),
+      label: 'Manage users',
+    ),
+  ],
+  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+);
 
   void _onTabTapped(int index) {
     setState(() {
@@ -169,35 +219,15 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
 
-      body: _views[_currentIndex],
+      body:
+        _isAdmin ?
+        _adminViews[_currentIndex] :
+        _userViews[_currentIndex] ,
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onTabTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.control_point_duplicate),
-            label: 'Send',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.recent_actors),
-            label: 'Fantasy',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Stats',
-          ),
-        ],
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
+      bottomNavigationBar:
+        _isAdmin ?
+        _adminNavigationBar(context) :
+        _userNavigationBar(context) ,
     );
   }
 }
