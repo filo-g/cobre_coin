@@ -59,6 +59,25 @@ class SupabaseUtils {
     return data?[field];
   }
 
+  /// Get all users (except admins and self).
+  /// 
+  /// Returns List&lt;Map&lt;String, dynamic&gt;&gt;
+  static Future<List<Map<String, dynamic>>?> getUsers() async {
+    final userId = getUserId();
+    if (userId == null) {
+      // User is not logged in.
+      return null;
+    }
+
+    final data = await supabase
+      .from('users')
+      .select()
+      .neq('id', userId)
+      .neq('role', 'admin');
+    
+    return data;
+  }
+
   /// Fetch the user balance from the 'accounts' table.
   /// 
   /// Returns List&lt;Map&lt;String, dynamic&gt;&gt; with all the accounts
