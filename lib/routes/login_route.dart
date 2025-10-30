@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
-import 'splash_route.dart';
 import 'forgot_password_route.dart';
 
 class LoginRoute extends StatefulWidget {

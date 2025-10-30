@@ -9,7 +9,6 @@ import 'package:cobre_coin/utils/show_snack_bar.dart';
 import 'package:cobre_coin/utils/phone_form_field.dart';
 
 import 'login_route.dart';
-import 'splash_route.dart';
 
 class RegisterRoute extends StatefulWidget {
   const RegisterRoute({super.key});
