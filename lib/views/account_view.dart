@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
-import 'package:cobre_coin/routes/login_route.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
@@ -76,17 +75,12 @@ class _AccountRouteState extends State<AccountRoute> {
   Future<void> _signOut() async {
     try {
       await supabase.auth.signOut();
+      // supabase redirect will handle the signOut
     } on AuthException catch (error) {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {
       if (mounted) {
         context.showSnackBar('Unexpected error occurred', isError: true);
-      }
-    } finally {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginRoute()),
-        );
       }
     }
   }

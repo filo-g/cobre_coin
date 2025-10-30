@@ -1,9 +1,11 @@
 import 'dart:async';
 
-import 'package:cobre_coin/routes/splash_route.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:cobre_coin/routes/splash_route.dart';
+import 'package:cobre_coin/routes/login_route.dart';
 import 'package:cobre_coin/routes/reset_password_route.dart';
+
 import 'show_snack_bar.dart';
 import 'supabase_utils.dart';
 
@@ -22,6 +24,12 @@ StreamSubscription<AuthState> supabaseAuthListener(GlobalKey<NavigatorState> nav
         case AuthChangeEvent.passwordRecovery:
           navigatorKey.currentState?.pushReplacement(
             MaterialPageRoute(builder: (_) => const ResetPasswordRoute()),
+          );
+          break;
+        case AuthChangeEvent.signedOut:
+          navigatorKey.currentState?.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const LoginRoute()),
+            (route) => false,
           );
           break;
 
