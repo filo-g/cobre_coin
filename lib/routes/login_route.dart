@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cobre_coin/main.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
+import 'register_route.dart';
 import 'forgot_password_route.dart';
 
 class LoginRoute extends StatefulWidget {
@@ -120,6 +121,14 @@ class _LoginRouteState extends State<LoginRoute> {
             child: Text(_isLoading ? 'Logging in...' : 'Log in'),
           ),
           const SizedBox(height: 8),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const RegisterRoute()),
+              );
+            },
+            child: const Text('I don\'t have an account'),
+          ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pushReplacement(
