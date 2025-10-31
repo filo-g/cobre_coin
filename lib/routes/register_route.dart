@@ -124,6 +124,26 @@ class _RegisterRouteState extends State<RegisterRoute> {
     }
   }
 
+  String? _pronounsValidator(dynamic value) {
+    if (value == null || (value is String && value.isEmpty)) {
+      return 'Please select the one your are more confortable with.';
+    }
+    return null;
+  }
+
+  String? _requiredValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  }
+  String? _pronounsValidator(dynamic value) {
+    if (value == null || (value is String && value.isEmpty)) {
+      return 'Please select the one your are more confortable with.';
+    }
+    return null;
+  }
+
   @override
   void initState() {
     _phoneController = PhoneController();
@@ -150,6 +170,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         children: [
           const Text('Let\'s open your new CobreCoin Internal Bank Account'),
+                        validator: _requiredValidator,
           const SizedBox(height: 18),
           Form(
             key: _formKey,
@@ -166,10 +187,11 @@ class _RegisterRouteState extends State<RegisterRoute> {
                           border: decorationBorder,
                           contentPadding: decorationContentPadding,
                         ),
-                        autofillHints: [
+                          if (value == null || value.trim().isEmpty) {
                           AutofillHints.newUsername,
                           AutofillHints.username,
                         ],
+                        validator: _requiredValidator,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
@@ -186,7 +208,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
+                          if (value == null || value.trim().isEmpty) {
                             return 'Please enter a password';
                           }
                           final rules = {
@@ -237,6 +259,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
                 const SizedBox(height: 24),
                 const Text('Personal data'),
                 const SizedBox(height: 16),
+                  validator: _requiredValidator,
                 TextFormField(
                   controller: _usernameController,
                   decoration: InputDecoration(
@@ -247,6 +270,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
                     contentPadding: decorationContentPadding,
                   ),
                 ),
+                  validator: _requiredValidator,
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _displayNameController,
@@ -257,8 +281,10 @@ class _RegisterRouteState extends State<RegisterRoute> {
                     border: decorationBorder,
                     contentPadding: decorationContentPadding,
                   ),
+                  validator: _requiredValidator,
                 ),
                 const SizedBox(height: 16),
+                  validator: _pronounsValidator,
                 TextFormField(
                   controller: _fullNameController,
                   decoration: InputDecoration(
@@ -268,6 +294,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
                     border: decorationBorder,
                     contentPadding: decorationContentPadding,
                   ),
+                  validator: _requiredValidator,
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField(
@@ -282,8 +309,10 @@ class _RegisterRouteState extends State<RegisterRoute> {
                   onChanged: (val) => setState(() {
                     _selectedPronouns = val;
                   }),
+                  validator: _pronounsValidator,
                 ),
                 const SizedBox(height: 16),
+                  validator: _requiredValidator,
                 PhoneFieldView(
                   controller: _phoneController,
                   focusNode: focusNode,
@@ -310,6 +339,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
                     border: decorationBorder,
                     contentPadding: decorationContentPadding,
                   ),
+                  validator: _requiredValidator,
                 ),
               ],
             ),
