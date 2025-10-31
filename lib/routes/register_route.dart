@@ -19,6 +19,8 @@ class RegisterRoute extends StatefulWidget {
 
 class _RegisterRouteState extends State<RegisterRoute> {
   bool _isLoading = false;
+  Timer? _debounce;
+  bool? _usernameAvailable;
   DateTime _selectedDate = DateTime.now();
   String? _selectedDateFormatted;
   String? _selectedPronouns;
@@ -124,16 +126,37 @@ class _RegisterRouteState extends State<RegisterRoute> {
     }
   }
 
-  String? _pronounsValidator(dynamic value) {
-    if (value == null || (value is String && value.isEmpty)) {
-      return 'Please select the one your are more confortable with.';
-    }
-    return null;
+  void _onUsernameChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _checkUsername(value);
+    });
+  }
+
+  Future<void> _checkUsername(String username) async {
+    final res = await supabase
+      .from('users')
+      .select('username')
+      .eq('username', username)
+      .maybeSingle();
+
+    setState(() {
+      _usernameAvailable = res == null;
+    });
   }
 
   String? _requiredValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'This field is required';
+    }
+    return null;
+  }
+  String? _usernameValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Username required';
+    }
+    if (_usernameAvailable == false) {
+      return 'Username already taken';
     }
     return null;
   }
@@ -170,7 +193,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         children: [
           const Text('Let\'s open your new CobreCoin Internal Bank Account'),
-                        validator: _requiredValidator,
           const SizedBox(height: 18),
           Form(
             key: _formKey,
@@ -187,7 +209,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
                           border: decorationBorder,
                           contentPadding: decorationContentPadding,
                         ),
-                          if (value == null || value.trim().isEmpty) {
+                        autofillHints: [
                           AutofillHints.newUsername,
                           AutofillHints.username,
                         ],
@@ -259,18 +281,30 @@ class _RegisterRouteState extends State<RegisterRoute> {
                 const SizedBox(height: 24),
                 const Text('Personal data'),
                 const SizedBox(height: 16),
-                  validator: _requiredValidator,
                 TextFormField(
                   controller: _usernameController,
                   decoration: InputDecoration(
                     labelText: 'Username',
                     hintText: 'usuario123',
-                    helperText: 'Your unique login name.',
+                    helperText: _usernameAvailable == false ?
+                      'Username already taken.' :
+                      'Your unique login name.',
                     border: decorationBorder,
                     contentPadding: decorationContentPadding,
+                    suffixIcon: _usernameAvailable == null ?
+                      null :
+                      Icon(
+                        _usernameAvailable! ?
+                          Icons.check_circle :
+                          Icons.error,
+                        color: _usernameAvailable! ?
+                          Colors.greenAccent :
+                          Colors.redAccent,
+                      ),
                   ),
+                  onChanged: _onUsernameChanged,
+                  validator: _usernameValidator,
                 ),
-                  validator: _requiredValidator,
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _displayNameController,
@@ -284,7 +318,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
                   validator: _requiredValidator,
                 ),
                 const SizedBox(height: 16),
-                  validator: _pronounsValidator,
                 TextFormField(
                   controller: _fullNameController,
                   decoration: InputDecoration(
@@ -312,7 +345,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
                   validator: _pronounsValidator,
                 ),
                 const SizedBox(height: 16),
-                  validator: _requiredValidator,
                 PhoneFieldView(
                   controller: _phoneController,
                   focusNode: focusNode,
