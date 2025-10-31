@@ -27,7 +27,10 @@ class UsersViewState extends State<UsersView> {
       context: context,
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
-          builder: (BuildContext context, void Function(void Function()) setStateDialog) {
+          builder: (
+            BuildContext context,
+            void Function(void Function()) setStateDialog
+          ) {
             return AlertDialog(
               title: Text(user['full_name'] ?? 'No name'),
               content: Column(
@@ -47,11 +50,15 @@ class UsersViewState extends State<UsersView> {
                       Switch(
                         value: approved,
                         onChanged: (value) async {
-                          setState(() {
+                          setStateDialog(() {
                             approved = value;
-                            // Also update the local value
-                            user['approved'] = value;
                           });
+                          if (mounted) {
+                            setState(() {
+                              // Also update the local value
+                              user['approved'] = value;
+                            });
+                          }
                           await SupabaseUtils.updateUser(
                             user['id'],
                             {'approved': value}
