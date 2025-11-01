@@ -43,8 +43,6 @@ class _RegisterRouteState extends State<RegisterRoute> {
     DropdownMenuItem(value: 'she', child: Text('She/her')),
     DropdownMenuItem(value: 'they', child: Text('They/them')),
   ];
-  
-
 
   Future<void> _register() async {
     try {
@@ -84,6 +82,20 @@ class _RegisterRouteState extends State<RegisterRoute> {
         );
         
         // no need to do anything else, the redirect listener will change the route
+        if(mounted) {
+          context.showSnackBar("We sent you an email, please check your inbox!");
+        }
+        setState(() {
+          _emailController.clear();
+          _passwordController.clear();
+          _confirmPasswordController.clear();
+          _usernameController.clear();
+          _displayNameController.clear();
+          _fullNameController.clear();
+          _selectedPronouns = null;
+          // _phoneController. = null; // TODO: Make this work
+          _dateController.clear();
+        });
       }
 
     } on AuthException catch (error) {
