@@ -124,6 +124,7 @@ class _MainScreenState extends State<MainScreen> {
   ];
   final List<Widget> _adminViews = const [
     WelcomeView(),
+    SendView(),
     UsersView(),
   ];
 
@@ -162,6 +163,11 @@ class _MainScreenState extends State<MainScreen> {
     BottomNavigationBarItem(
       icon: Icon(Icons.home),
       label: 'Home',
+    ),
+
+    BottomNavigationBarItem(
+      icon: Icon(Icons.control_point_duplicate),
+      label: 'Send',
     ),
 
     BottomNavigationBarItem(
