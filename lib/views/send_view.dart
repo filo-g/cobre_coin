@@ -11,6 +11,7 @@ class SendView extends StatefulWidget {
 class _SendViewState extends State<SendView> {
   bool _isLoading = true;
   late final List<Map<String, dynamic>>? _users;
+  final _amountController = TextEditingController();
 
   Future<void> _getUsers() async {
     final users = await SupabaseUtils.getUsers();
@@ -20,7 +21,7 @@ class _SendViewState extends State<SendView> {
     });
   }
 
-  void _showUserInfo(Map<String, dynamic> user) {
+  void _sendTo(Map<String, dynamic> user) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -29,7 +30,48 @@ class _SendViewState extends State<SendView> {
             BuildContext context,
             void Function(void Function()) setStateDialog
           ) {
-            return AlertDialog();
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Text('Enter a Number'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('How much do you want to send?'),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _amountController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter a value',
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final text = _amountController.text.trim();
+                    final number = int.tryParse(text);
+                    if (number != null) {
+                      Navigator.pop(context, number);
+                    } else {
+                      // Show a small feedback if the input isn’t valid
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please enter a valid number')),
+                      );
+                    }
+                  },
+                  child: const Text('Confirm'),
+                ),
+              ],
+            );
           }
         );
       },
@@ -65,11 +107,12 @@ class _SendViewState extends State<SendView> {
           margin: const EdgeInsets.symmetric(vertical: 6),
           child: ListTile(
             title: Text(
-              '${user['display_name'] ?? 'no one'})'
+              '${user['display_name'] ?? 'no one'}'
             ),
             subtitle: Text(
               '@${user['username'] ?? 'e404'}'
             ),
+            onTap: () => _sendTo(user),
           ),
         );
       },
