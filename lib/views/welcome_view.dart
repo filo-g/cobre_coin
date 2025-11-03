@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:cobre_coin/utils/supabase_utils.dart';
+import 'package:cobre_coin/utils/transactions.dart';
 import 'package:cobre_coin/utils/show_snack_bar.dart';
 
 class WelcomeView extends StatefulWidget {
@@ -22,7 +22,7 @@ class _WelcomeViewState extends State<WelcomeView> {
       _loading = true;
     });
     try {
-      _accounts = await SupabaseUtils.getUserAccounts();
+      _accounts = await Transactions.getOwnAccounts();
     } catch (error) {
       if (mounted) {
         context.showSnackBar('$error', isError: true);

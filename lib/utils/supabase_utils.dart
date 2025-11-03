@@ -78,26 +78,6 @@ class SupabaseUtils {
     return data;
   }
 
-  /// Fetch the user balance from the 'accounts' table.
-  /// 
-  /// Returns List&lt;Map&lt;String, dynamic&gt;&gt; with all the accounts
-  /// found. (should be just one but whatever, admin user has multiple so)
-  static Future<List<Map<String, dynamic>>?> getUserAccounts() async {
-    final userId = getUserId();
-    if (userId == null) {
-      // User is not logged in.
-      return null;
-    }
-
-    final accounts = await supabase
-      .from('accounts')
-      .select('id, balance, name, is_primary')
-      .eq('user_id', userId)
-      .order('is_primary', ascending: false);
-
-    return accounts;
-  }
-
   /// Update the fields of current user.
   /// 
   /// Returns a &lt;PostgrestResponse&gt; or null if something foes wrong.

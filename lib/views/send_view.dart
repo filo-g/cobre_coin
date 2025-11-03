@@ -1,3 +1,5 @@
+import 'package:cobre_coin/utils/show_snack_bar.dart';
+import 'package:cobre_coin/utils/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:cobre_coin/utils/supabase_utils.dart';
 
@@ -12,6 +14,7 @@ class _SendViewState extends State<SendView> {
   bool _isLoading = true;
   late final List<Map<String, dynamic>>? _users;
   final _amountController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   Future<void> _getUsers() async {
     final users = await SupabaseUtils.getUsers();
@@ -21,7 +24,7 @@ class _SendViewState extends State<SendView> {
     });
   }
 
-  void _sendTo(Map<String, dynamic> user) {
+  void _sendToDialog(Map<String, dynamic> user) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -34,38 +37,62 @@ class _SendViewState extends State<SendView> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              title: Text('Enter a Number'),
+              title: Text('Sending to ${user['display_name']}'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('How much do you want to send?'),
+                  TextField(
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(
+                      label: Text('Transaction description'),
+                      border: OutlineInputBorder(),
+                      hintText: 'The motive of this transaction',
+                    ),
+                  ),
                   const SizedBox(height: 12),
                   TextField(
                     controller: _amountController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
+                      label: Text('How much do you want to send?'),
                       border: OutlineInputBorder(),
-                      hintText: 'Enter a value',
+                      hintText: 'Amount of Cobre to send',
                     ),
                   ),
                 ],
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    _descriptionController.clear();
+                    _amountController.clear();
+                    Navigator.pop(context);
+                  },
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    final text = _amountController.text.trim();
-                    final number = int.tryParse(text);
-                    if (number != null) {
-                      Navigator.pop(context, number);
+                  onPressed: () async {
+                    final amountString = _amountController.text.trim();
+                    final amountInt = int.tryParse(amountString);
+                    final descriptionString = _descriptionController.text.trim();
+
+                    if (amountInt != null && amountInt > 0) {
+                      final res = await Transactions.sendTo(
+                        user['id'],
+                        amountInt,
+                        descriptionString
+                      );
+
+                      if (res != null && res['status'] == 'success') {
+                        print(res);
+                        context.showSnackBar('Cobre sent successfully!');
+                        _descriptionController.clear();
+                        _amountController.clear();
+                        Navigator.pop(context);
+                      }
                     } else {
                       // Show a small feedback if the input isn’t valid
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please enter a valid number')),
-                      );
+                      context.showSnackBar('Please enter a valid amount');
                     }
                   },
                   child: const Text('Confirm'),
@@ -112,7 +139,7 @@ class _SendViewState extends State<SendView> {
             subtitle: Text(
               '@${user['username'] ?? 'e404'}'
             ),
-            onTap: () => _sendTo(user),
+            onTap: () => _sendToDialog(user),
           ),
         );
       },
