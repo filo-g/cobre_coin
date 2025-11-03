@@ -80,6 +80,7 @@ class Transactions {  // TODO: I don't like the class name, i want to find anoth
       return res;
     } catch (e) {
       print('Error on transaction: $e');
+      return null;
     }
   }
 }
