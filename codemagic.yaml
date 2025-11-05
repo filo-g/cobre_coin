@@ -13,6 +13,10 @@ workflows:
           cd ios
           pod install
           cd ..
+      - name: Create .env file
+        script: |
+          echo "SUPABASE_URL=$SUPABASE_URL" > .env
+          echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY" >> .env
       - name: Build iOS (unsigned)
         script: |
           flutter build ios --release --no-codesign
