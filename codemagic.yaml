@@ -16,7 +16,7 @@ workflows:
       - name: Create .env file
         script: |
           echo "SUPABASE_URL=$SUPABASE_URL" > .env
-          echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY" >> .env
+          echo "SUPABASE_PUBLISHABLE=$SUPABASE_PUBLISHABLE" >> .env
       - name: Build iOS (unsigned)
         script: |
           flutter build ios --release --no-codesign
